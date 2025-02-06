@@ -1,4 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FirstSwitch.ai - Career Tools Platform
+
+![FirstSwitch.ai Logo](/public/firstswitch-logo.png)
+
+FirstSwitch.ai is a modern web application that provides professional tools to accelerate career growth and personal branding in the tech industry.
+
+## 🚀 Features
+
+### 1. LinkedIn Search Link Generator
+- **Manual Search**: Create custom LinkedIn search links by selecting:
+  - Multiple technologies from a comprehensive tech stack
+  - Location preferences
+  - Years of experience
+- **Intro Parser**: Generate search links by pasting LinkedIn introductions
+- Copy-to-clipboard functionality
+- Real-time preview of generated links
+
+### 2. AI Career Guidance
+- Personalized career advice based on:
+  - Current role
+  - Career goals
+  - Professional aspirations
+- AI-powered recommendations
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Type Safety**: TypeScript
+- **Form Handling**: React Hook Form
+- **Icons**: Lucide Icons
+
+## 🏗 Project Structure
 
 ## Getting Started
 
