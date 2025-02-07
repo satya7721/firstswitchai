@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Home, LayoutDashboard, Calendar, FileText, Menu } from "lucide-react"
+import { Home, LayoutDashboard, Calendar, FileText, Menu, Phone, Video } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "./ui/button"
@@ -23,6 +23,8 @@ export function Sidebar(): JSX.Element {
     { href: "/linkedin-link", label: "LinkedIn Generator", icon: LayoutDashboard },
     { href: "/ai-guidance", label: "AI Guidance", icon: Calendar },
     { href: "/resume-review", label: "Resume Review", icon: FileText },
+    { href: "/book-call", label: "Book a Call", icon: Phone },
+    { href: "/demo-videos", label: "Demo Videos", icon: Video },
   ]
 
   return (

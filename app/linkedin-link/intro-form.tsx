@@ -54,7 +54,7 @@ export function IntroForm(): JSX.Element {
     } catch (error) {
       toast({
         title: "Error generating link",
-        description: "Please try again with different text.",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
         variant: "destructive",
       })
     }
@@ -70,7 +70,7 @@ export function IntroForm(): JSX.Element {
     } catch (error) {
       toast({
         title: "Failed to copy",
-        description: "Please try copying the link manually.",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
         variant: "destructive",
       })
     }
