@@ -1,3 +1,4 @@
+import { JSX } from "react"
 import { GuidanceForm } from "./guidance-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 

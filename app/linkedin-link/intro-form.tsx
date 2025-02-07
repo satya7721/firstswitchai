@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import * as React from "react"
 
 const formSchema = z.object({
   introText: z.string().min(1, "Please enter your LinkedIn intro"),
@@ -21,7 +22,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function IntroForm(): JSX.Element {
+export function IntroForm(): React.JSX.Element {
   const [generatedLink, setGeneratedLink] = useState<string>("")
   const { toast } = useToast()
 

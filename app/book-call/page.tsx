@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookingForm } from "./booking-form"
+import { JSX } from "react"
 
 interface TimeSlot {
   id: string

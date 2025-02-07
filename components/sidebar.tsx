@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "./ui/button"
 import { useSidebar } from "@/contexts/sidebar-context"
+import { JSX } from "react"
 
 interface MenuItem {
   href: string

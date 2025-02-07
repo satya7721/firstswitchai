@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { VideoList } from "./video-list"
+import { JSX } from "react"
 
 interface VideoItem {
   id: string
