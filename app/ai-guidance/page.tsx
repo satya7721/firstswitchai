@@ -1,7 +1,31 @@
 import { GuidanceForm } from "./guidance-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function AIGuidance() {
+interface StepItem {
+  title: string
+  description: string
+}
+
+const steps: StepItem[] = [
+  {
+    title: "1. Current Situation",
+    description: "Tell us about your current role and experience level.",
+  },
+  {
+    title: "2. Current Role",
+    description: "Tell us about your current position or role in the tech industry.",
+  },
+  {
+    title: "3. Career Goal",
+    description: "Share your career aspirations and where you'd like to be in your professional journey.",
+  },
+  {
+    title: "4. Get Guidance",
+    description: "Click the button to receive AI-powered career advice tailored to your situation.",
+  },
+]
+
+export default function AIGuidance(): JSX.Element {
   return (
     <div className="space-y-8 p-8">
       <div className="flex items-center justify-between border-b pb-4">
@@ -20,30 +44,14 @@ export default function AIGuidance() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <h3 className="font-medium text-base">1. Enter Your Name</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Start by providing your name so we can personalize the guidance for you.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="font-medium text-base">2. Current Role</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Tell us about your current position or role in the tech industry.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="font-medium text-base">3. Career Goal</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Share your career aspirations and where you'd like to be in your professional journey.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="font-medium text-base">4. Get Guidance</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Click the button to receive AI-powered career advice tailored to your situation.
-              </p>
-            </div>
+            {steps.map((step) => (
+              <div key={step.title} className="space-y-2">
+                <h3 className="font-medium text-base">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>

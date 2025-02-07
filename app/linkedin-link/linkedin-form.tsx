@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -18,61 +18,78 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { useForm } from "react-hook-form"
 import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
-import { techStacks } from "./tech-stack-data"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-type FormData = {
-  techStack: string[]
-  city: string
-  experience: string
-}
+const formSchema = z.object({
+  technologies: z.array(z.string()).min(1, "Select at least one technology"),
+  location: z.string().optional(),
+  experience: z.number().min(0).max(50).optional(),
+})
 
-export function LinkedInForm() {
-  const [open, setOpen] = useState(false)
-  const [selectedTech, setSelectedTech] = useState<string[]>([])
+type FormValues = z.infer<typeof formSchema>
+
+export function LinkedInForm(): JSX.Element {
   const [generatedLink, setGeneratedLink] = useState<string>("")
   const { toast } = useToast()
-  const form = useForm<FormData>({
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      techStack: [],
-      city: "",
-      experience: "",
-    }
+      technologies: [],
+      location: "",
+      experience: 0,
+    },
   })
 
-  const onSubmit = (data: FormData) => {
-    const baseUrl = "https://www.linkedin.com/search/results/people/?"
-    const keywords = `keywords=${encodeURIComponent(selectedTech.join(" OR "))}`
-    const location = `&geoUrn=${encodeURIComponent(`["${data.city}"]`)}`
-    const experience = data.experience ? `&experience=${data.experience}` : ""
-    
-    const link = `${baseUrl}${keywords}${location}${experience}`
-    setGeneratedLink(link)
+  const onSubmit = async (data: FormValues): Promise<void> => {
+    try {
+      const searchParams = new URLSearchParams()
+      
+      if (data.technologies.length > 0) {
+        searchParams.append("keywords", data.technologies.join(" OR "))
+      }
+      
+      if (data.location) {
+        searchParams.append("location", data.location)
+      }
+      
+      if (data.experience) {
+        searchParams.append("experience", data.experience.toString())
+      }
+
+      const link = `https://www.linkedin.com/search/results/people/?${searchParams.toString()}`
+      setGeneratedLink(link)
+      
+      toast({
+        title: "Link generated successfully",
+        description: "Your LinkedIn search link is ready to use.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error generating link",
+        description: "Please try again with different parameters.",
+        variant: "destructive",
+      })
+    }
   }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedLink)
-    toast({
-      title: "Copied!",
-      description: "Link copied to clipboard",
-    })
+  const copyToClipboard = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(generatedLink)
+      toast({
+        title: "Copied to clipboard",
+        description: "The link has been copied to your clipboard.",
+      })
+    } catch (error) {
+      toast({
+        title: "Failed to copy",
+        description: "Please try copying the link manually.",
+        variant: "destructive",
+      })
+    }
   }
 
   return (
@@ -80,7 +97,7 @@ export function LinkedInForm() {
       <CardHeader>
         <CardTitle>Generate LinkedIn Search Link</CardTitle>
         <CardDescription>
-          Create a custom search link for finding professionals with specific tech skills
+          Create a custom LinkedIn search link by selecting your preferences
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -88,45 +105,17 @@ export function LinkedInForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="techStack"
+              name="technologies"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Tech Stack</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      if (!selectedTech.includes(value)) {
-                        setSelectedTech([...selectedTech, value])
-                      }
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select technologies" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {techStacks.map((tech) => (
-                        <SelectItem key={tech.value} value={tech.value}>
-                          {tech.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {selectedTech.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedTech.map((tech) => (
-                        <Badge
-                          key={tech}
-                          variant="secondary"
-                          className="text-xs"
-                          onClick={() => {
-                            setSelectedTech(selectedTech.filter((t) => t !== tech))
-                          }}
-                        >
-                          {techStacks.find((t) => t.value === tech)?.label}
-                          <span className="ml-1 cursor-pointer">×</span>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                <FormItem>
+                  <FormLabel>Technologies</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="e.g., React, TypeScript" 
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.value.split(",").map(t => t.trim()))}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -134,12 +123,12 @@ export function LinkedInForm() {
 
             <FormField
               control={form.control}
-              name="city"
+              name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>Location</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. London" {...field} />
+                    <Input placeholder="e.g., San Francisco" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -153,7 +142,13 @@ export function LinkedInForm() {
                 <FormItem>
                   <FormLabel>Years of Experience</FormLabel>
                   <FormControl>
-                    <Input type="number" min="0" max="50" {...field} />
+                    <Input 
+                      type="number" 
+                      min="0" 
+                      max="50" 
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +162,11 @@ export function LinkedInForm() {
         {generatedLink && (
           <div className="mt-6 p-4 border rounded-lg bg-muted/50">
             <p className="mb-4 break-all text-sm">{generatedLink}</p>
-            <Button onClick={copyToClipboard} variant="secondary" className="w-full">
+            <Button 
+              onClick={copyToClipboard} 
+              variant="secondary" 
+              className="w-full"
+            >
               Copy Link
             </Button>
           </div>
